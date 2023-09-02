@@ -17,7 +17,7 @@ const Homepage = () =>{
     const [activeTab, setActiveTab] = useState(TABS.for_you);
     const [filteredData, setFilteredData] = useState([]);
     const [searchValue, setSearchValue]= useState('');
-    const [showList, setShowList] = useState(false);
+    const [showList, setShowList] = useState(true);
     const getSongsInfo = () => {
         fetch('https://cms.samespace.com/items/songs', {
             method: 'GET',
@@ -27,7 +27,7 @@ const Homepage = () =>{
         .then((res)=> {
             setSongsData(res.data);
             setFilteredData(res.data);
-            setSelectedSong(res.data[0])
+            // setSelectedSong(res.data[0])
         })
         .catch((err)=> {
             console.log(err);
