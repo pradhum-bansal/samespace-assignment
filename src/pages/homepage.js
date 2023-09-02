@@ -64,16 +64,7 @@ const Homepage = () =>{
             }
         })
     }
-   function handleSearch(param1, param2){
-        
-        // if(param1!==''){
-        // let filterData = param2.filter((item)=> (item.name.toLowerCase().includes(param1) || item.artist.toLowerCase().includes(param1) ))
-        //     setSearchValue(param1)
-        // }
-        // else{
-        //     console.log(param2)
-        //     return param2
-        // }
+   function handleSearch(param1){
         setSearchValue(param1)
        
     }
@@ -124,7 +115,6 @@ const Homepage = () =>{
                 <AudioPlayer
                     autoPlay
                     src={selectedSong.url}
-                    onPlay={e => console.log(e, "onPlay")}
                     showDownloadProgress={false}
                     showSkipControls={true}
                     showJumpControls={false}
