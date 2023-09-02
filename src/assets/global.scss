@@ -171,7 +171,9 @@ body{
 ::-webkit-scrollbar{
     display: none;
 }
-
+.show_list{
+    display: none;
+}
 @media (max-width: 768px) {
     .homepage {
         padding: 20px;
@@ -181,7 +183,8 @@ body{
             flex-direction: row;
         }
         .middle{
-           display: none;
+        //    display: none;
+            width: 100%;
         }
         .media-player{
             width: 100%;
@@ -203,5 +206,20 @@ body{
             }
         }
         }
+    }
+    .show_list{
+        display: flex;
+        justify-content: end;
+        align-items: center;
+        color: #fff;
+        border: 1px solid #868686;
+        padding: 8px;
+        border-radius: 8px;
+        width: fit-content;
+        float: right;
+        margin: 8px 0;
+    }
+    .display_none{
+        display: none !important;
     }
 }

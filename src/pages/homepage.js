@@ -15,7 +15,9 @@ const Homepage = () =>{
     const [songsData, setSongsData] = useState([]);
     const [selectedSong, setSelectedSong] = useState({})
     const [activeTab, setActiveTab] = useState(TABS.for_you);
-    const [filteredData, setFilteredData] = useState([])
+    const [filteredData, setFilteredData] = useState([]);
+    const [searchValue, setSearchValue]= useState('');
+    const [showList, setShowList] = useState(false);
     const getSongsInfo = () => {
         fetch('https://cms.samespace.com/items/songs', {
             method: 'GET',
@@ -26,6 +28,9 @@ const Homepage = () =>{
             setSongsData(res.data);
             setFilteredData(res.data);
             setSelectedSong(res.data[0])
+        })
+        .catch((err)=> {
+            console.log(err);
         })
     }
 
@@ -55,10 +60,22 @@ const Homepage = () =>{
         let id = data.id;
         filteredData.forEach((item, index)=> {
             if(item.id === id){
-                console.log((index - 1 + filteredData.length) % filteredData.length, "pradhum")
                 setSelectedSong(filteredData[(index - 1 + filteredData.length) % filteredData.length])
             }
         })
+    }
+   function handleSearch(param1, param2){
+        
+        // if(param1!==''){
+        // let filterData = param2.filter((item)=> (item.name.toLowerCase().includes(param1) || item.artist.toLowerCase().includes(param1) ))
+        //     setSearchValue(param1)
+        // }
+        // else{
+        //     console.log(param2)
+        //     return param2
+        // }
+        setSearchValue(param1)
+       
     }
     return(
         <div className="homepage" style={{background: `linear-gradient(108deg, ${selectedSong.accent}, rgba(0, 0, 0, 0.60) 99.84%), #000`}}>
@@ -70,17 +87,18 @@ const Homepage = () =>{
                     <img src={profile} alt="profile"/>
                 </div>
             </div>
-            <div className="middle">
+            <div className="show_list" onClick={()=> setShowList(!showList)}>{!showList ? "Show List" : "Hide List"}</div>
+            <div className={showList ? 'middle' : 'middle display_none'}>
                 <div className="topbar">
                     <div onClick={()=> setActiveTab(TABS.for_you)} className={`for_you ${activeTab === TABS.for_you ? '' : 'not_selected'}`}>For You</div>
                     <div onClick={()=> setActiveTab(TABS.top_tracks)} className={`top_tracks ${activeTab === TABS.top_tracks ? '' : 'not_selected'}`}>Top Tracks</div>
                 </div>
                 <div className="search_bar">
-                    <input placeholder="Search Song, Artist"/>
+                    <input placeholder="Search Song, Artist" onChange={(event)=> handleSearch(event.target.value, filteredData)}/>
                     <img src={Frame} alt="search"/>
                 </div>
                  <div className="list_item_container">
-            {filteredData.map((item, index)=> {
+            {filteredData.filter((data)=> (data.name.toLowerCase().includes(searchValue) || data.artist.toLowerCase().includes(searchValue))).map((item, index)=> {
                 return(
                      <ListItem
                         icon = {item.cover}
@@ -95,7 +113,7 @@ const Homepage = () =>{
             </div>
             </div>
             {selectedSong && Object.keys(selectedSong).length > 0 &&
-            <div className="media-player">
+            <div className={showList? "media-player display_none" : "media-player"}>
                 <div className="played_songs_details">
                     <div className="song_played">{selectedSong.name}</div>
                     <div className="artist_played">{selectedSong.artist}</div>
