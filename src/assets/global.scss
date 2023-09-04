@@ -11,7 +11,7 @@ body{
     box-sizing: border-box;
     display: flex;
     padding: 30px;
-    height: 100vh;
+    min-height: 100vh;
     
     .sidebar{
         width: 25%;
@@ -78,7 +78,7 @@ body{
             align-items: center;
             width: 100%;
             cursor: pointer;
-            max-height: calc(100vh - 150px);
+            max-height: calc(100vh - 250px);
             overflow: scroll;
             .list_item{
                 padding: 16px;
@@ -221,5 +221,8 @@ body{
     }
     .display_none{
         display: none !important;
+    }
+    .list_item_container{
+        max-height: 100vh;
     }
 }
