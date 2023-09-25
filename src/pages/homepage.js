@@ -4,7 +4,9 @@ import Frame from '../assets/Frame.svg'
 import AudioPlayer from 'react-h5-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
 import logo from '../assets/Logo.svg'
-import profile from '../assets/Profile.svg'
+import profile from '../assets/Profile.svg';
+import { useQuery } from '@apollo/client';
+import { GET_SONGS, SEARCH } from './graphql'; 
 
 const TABS = {
     for_you: 'for_you',
@@ -12,39 +14,26 @@ const TABS = {
 }
 
 const Homepage = () =>{
-    const [songsData, setSongsData] = useState([]);
+    const { loading, error, data: songsData } = useQuery(GET_SONGS);
+    const {loading1, error1, data} = useQuery(SEARCH, {})
+    // const [songsData, setSongsData] = useState([]);
     const [selectedSong, setSelectedSong] = useState({})
     const [activeTab, setActiveTab] = useState(TABS.for_you);
     const [filteredData, setFilteredData] = useState([]);
     const [searchValue, setSearchValue]= useState('');
     const [showList, setShowList] = useState(true);
-    const getSongsInfo = () => {
-        fetch('https://cms.samespace.com/items/songs', {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' },
-        })
-        .then(res => res.json())
-        .then((res)=> {
-            setSongsData(res.data);
-            setFilteredData(res.data);
-            // setSelectedSong(res.data[0])
-        })
-        .catch((err)=> {
-            console.log(err);
-        })
-    }
 
     useEffect(()=>{
-        getSongsInfo();
+        setFilteredData(!loading ? songsData?.songs: [])
         setActiveTab(TABS.for_you)
-    }, [])
+    }, [loading])
     useEffect(()=>{
         if(activeTab === TABS.top_tracks){
-            let list_of_songs = songsData.filter((item)=> item.top_track === true);
+            let list_of_songs = songsData?.songs.filter((item)=> item.top_track === true);
             setFilteredData(list_of_songs)
         }
         else if(activeTab === TABS.for_you){
-            setFilteredData(songsData)
+            setFilteredData(songsData?.songs)
         }
     },[activeTab])
     function handleNext(data){
@@ -65,8 +54,11 @@ const Homepage = () =>{
         })
     }
    function handleSearch(param1){
-        setSearchValue(param1)
+        setSearchValue(param1.toLowerCase());
        
+    }
+    const getUserData = () => {
+        
     }
     return(
         <div className="homepage" style={{background: `linear-gradient(108deg, ${selectedSong.accent}, rgba(0, 0, 0, 0.60) 99.84%), #000`}}>
@@ -89,15 +81,16 @@ const Homepage = () =>{
                     <img src={Frame} alt="search"/>
                 </div>
                  <div className="list_item_container">
-            {filteredData.filter((data)=> (data.name.toLowerCase().includes(searchValue) || data.artist.toLowerCase().includes(searchValue))).map((item, index)=> {
+            {filteredData?.filter((data)=> (data.name.toLowerCase().includes(searchValue) || data.artist.toLowerCase().includes(searchValue))).map((item, index)=> {
                 return(
                      <ListItem
-                        icon = {item.cover}
+                        icon = {item.cover?.id}
                         artist={item.artist}
                         name={item.name}
                         data = {item}
                         selectedSong = {selectedSong}
                         setSelectedSong = {(value)=> setSelectedSong(value)}
+                        key={index}
                      />
                 )
             })} 
@@ -110,7 +103,7 @@ const Homepage = () =>{
                     <div className="artist_played">{selectedSong.artist}</div>
                 </div>
                 <div className="cover_art_container">
-                   <img src={`https://cms.samespace.com/assets/${selectedSong.cover}`} alt="name" className="cover_art"/>
+                   <img src={`https://cms.samespace.com/assets/${selectedSong.cover?.id}`} alt="name" className="cover_art"/>
                 </div>
                 <AudioPlayer
                     autoPlay
@@ -120,6 +113,7 @@ const Homepage = () =>{
                     showJumpControls={false}
                     onClickNext= {(e)=> handleNext(selectedSong)}
                     onClickPrevious= {(e)=> handlePrev(selectedSong)}
+                    onEnded={()=> handleNext(selectedSong)}
                     // other props here
                 />
             </div>}
