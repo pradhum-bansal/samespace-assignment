@@ -6,7 +6,7 @@ import 'react-h5-audio-player/lib/styles.css';
 import logo from '../assets/Logo.svg'
 import profile from '../assets/Profile.svg';
 import { useQuery } from '@apollo/client';
-import { GET_SONGS, SEARCH } from './graphql'; 
+import { GET_SONGS } from './graphql'; 
 
 const TABS = {
     for_you: 'for_you',
@@ -15,8 +15,6 @@ const TABS = {
 
 const Homepage = () =>{
     const { loading, error, data: songsData } = useQuery(GET_SONGS);
-    const {loading1, error1, data} = useQuery(SEARCH, {})
-    // const [songsData, setSongsData] = useState([]);
     const [selectedSong, setSelectedSong] = useState({})
     const [activeTab, setActiveTab] = useState(TABS.for_you);
     const [filteredData, setFilteredData] = useState([]);
@@ -57,9 +55,9 @@ const Homepage = () =>{
         setSearchValue(param1.toLowerCase());
        
     }
-    const getUserData = () => {
+    // const getUserData = () => {
         
-    }
+    // }
     return(
         <div className="homepage" style={{background: `linear-gradient(108deg, ${selectedSong.accent}, rgba(0, 0, 0, 0.60) 99.84%), #000`}}>
             <div className="sidebar">
